@@ -1,18 +1,33 @@
 html
   head
-    title GeoHash
+    title Traffic Eye
+    link(rel='stylesheet', href='/stylesheets/style.css')
     script(type='text/javascript', src='http://maps.google.com/maps/api/js?sensor=true')
     script(type='text/javascript').
       var loadMap = function()
       {
         var myOptions = {
-        center: new google.maps.LatLng(#{lat}, #{lon}),
-        zoom: #{zoom},
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map(document.getElementById("map"),
-        myOptions);
+          center: new google.maps.LatLng(1.3000, 103.8000),
+          zoom: #{zoom},
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map"),
+          myOptions
+        );
+        var places = [!{JSON.stringify(places)}];
+        places = places.length == 0 ? places : places[0];
+        var marker;
+        for (var i = 0; i < places.length; i++){
+          var position = {lat: places[i].device.coord[0], lng: places[i].device.coord[1]};
+          marker = new google.maps.Marker({
+            position: position,
+            map: map
+          });
+        }
       };
       window.onload= loadMap;
   body
+    form(action='/plates' method='get')
+      input(type='text' class='search' name='plate' placeholder='Type in license plate to search' required)
+      input(type='submit' class='button' value='Search')
     #map(style='width:100%;height:100%;')
