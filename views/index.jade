@@ -18,10 +18,21 @@ html
         places = places.length == 0 ? places : places[0];
         var marker;
         for (var i = 0; i < places.length; i++){
+          console.log(places[i]);
           var position = {lat: places[i].device.coord[0], lng: places[i].device.coord[1]};
           marker = new google.maps.Marker({
             position: position,
-            map: map
+            map: map,
+            title: places[i].plate_id,
+          });
+          var contentString = "<h1>" + places[i].plate_id + "</h1>" + 
+          '<p> Found at ' + places[i].detection_time + '</p>';
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString,
+            maxWidth: 200,
+          });
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
           });
         }
       };

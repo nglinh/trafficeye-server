@@ -16,6 +16,10 @@ router.get('/', function(req, res, next) {
       db.close();
     });
     places.then(function(places) {
+      places = places.map(function (plate) {
+        plate.detection_time = plate._id.getTimestamp();
+        return plate;
+      });
       res.render('index', { places: places, zoom: 13 });
     });
   });  
